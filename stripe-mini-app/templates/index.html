@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments Mini-App</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; /* Light background */
+            color: #212529; /* Dark text */
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #007bff; /* Primary color */
+        }
+        button {
+            background-color: #007bff; /* Primary button color */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Deposit Amount</h1>
+    <button id="deposit20">Deposit 20€</button>
+    <button id="deposit40">Deposit 40€</button>
+    <button id="deposit100">Deposit 100€</button>
+
+    <script>
+        const stripe = Stripe('{{ stripe_pb_key }}'); 
+
+        document.getElementById('deposit20').addEventListener('click', () => handlePayment(20));
+        document.getElementById('deposit40').addEventListener('click', () => handlePayment(40));
+        document.getElementById('deposit100').addEventListener('click', () => handlePayment(100));
+
+        const handlePayment = async (amount) => {
+            const response = await fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `amount=${amount}`
+            });
+            const sessionId = await response.json();
+            const result = await stripe.redirectToCheckout({ sessionId: sessionId.id });
+            if (result.error) {
+                alert(result.error.message);
+            }
+        };
+    </script>
+</body>
+</html>
