@@ -11,4 +11,4 @@ link to the bot: https://t.me/aaaiiiuuu_bot
 
 The app can be ran locally inside the stripe-mini-app folder using command: python app.py
 
-It is accessible on: http://localhost:5000/
+Once the app is running you can access it on: http://localhost:5000/
